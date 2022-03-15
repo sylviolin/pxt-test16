@@ -167,23 +167,7 @@ namespace pixetto {
 	MicroBitSerial *serial = nullptr;
 	int m_funcid = 0;
 	struct pxt_data* m_p;
-	bool bOnStarting = false;
 
-
-	/*uint8_t data_buf[DATA_SIZE] = {0xFF};
-	int data_len = 0;
-	int m_type = 0;
-	int m_x = 0;
-	int m_y = 0;
-	int m_w = 0;
-	int m_h = 0;
-	int m_eqLen = 0;
-	float m_eqAnswer = 0;
-	char m_eqExpr[17] = {0};
-	float m_posx=0, m_posy=0, m_posz=0, m_rotx=0, m_roty=0, m_rotz=0, m_centerx=0, m_centery=0;
-	int m_failcount = 0;
-	*/
-	
     bool getPinName(PixSerialPin p, PinName& name) {
       switch(p) {
         case P0: name = MICROBIT_PIN_P0;  return true;
@@ -198,39 +182,6 @@ namespace pixetto {
       }
       return false;
     }
-	
-	
-	bool ssflush()
-	{
-		uint8_t a;
-		
-		int read_len = 0;
-		do {
-			read_len = serial->read(&a, 1, ASYNC);
-		} while (read_len > 0 && read_len != MICROBIT_NO_DATA);
-		
-		return true;
-	}
-	
-	int ssread(uint8_t *buf, int len, int wait_loop)
-	{
-		int read_len = 0;
-		int read_idx = 0;
-		int loop = 0;
-		do {
-			read_len = serial->read(&buf[read_idx], 1, ASYNC);
-			
-			if (read_len == 0 || read_len == MICROBIT_NO_DATA)
-				loop++;
-			else
-				read_idx++;
-		} while (read_idx < len && loop < wait_loop);
-		
-		if (read_len == 0 || read_len == MICROBIT_NO_DATA)
-			read_idx = read_len;
-
-		return read_idx;
-	}
 	
 	void addcksum(uint8_t *buf, int len)
 	{
@@ -285,7 +236,6 @@ namespace pixetto {
 			// Send command
 			uint8_t cmd[] = { PXT_PACKET_START, 0x05, PXT_CMD_GET_VERSION, 0, PXT_PACKET_END };
 			serial->send(cmd, sizeof(cmd), ASYNC);
-			//serial.flush();
 
 			// Get result
 			// ex: { FD, 9, E3, 1, 1, 6, 1, F5, FE }
@@ -296,7 +246,6 @@ namespace pixetto {
 				if (buf[2] == PXT_CMD_GET_VERSION || buf[2] == PXT_RET_FW_VERSION) {
 					m_p = (struct pxt_data*) buf;
 					vers = m_p->version;
-					// Serial.println(vers, HEX);
 				}
 			}
 		}
@@ -316,8 +265,6 @@ namespace pixetto {
 
     //% 
     bool begin(PixSerialPin rx, PixSerialPin tx){
-		bOnStarting = true;
-		
 		uint32_t ret = 0;
 		PinName txn, rxn;
 		uBit.sleep(3000);
@@ -338,13 +285,10 @@ namespace pixetto {
 			
 			ret = pxtGetVersion();
 		}
-		if (ret != 0)
-			bOnStarting = false;
-			
 		return ret;
     }
     
-    
+    /*
     int test_pxtGetVersion() {
 	}
 
@@ -376,7 +320,7 @@ namespace pixetto {
 			bOnStarting = false;
 			
 		return ret;
-    }
+    }*/
     
 	//%
 	void pxtSetFunc(int id)
@@ -448,7 +392,10 @@ namespace pixetto {
 			case PXTDATA_VERSION:
 				return m_p->version;
 			case PXTDATA_CLASS_ID:
-				return m_p->class_id;
+				if (m_p->func_id == DIGITS_OPERATION)
+					return m_p->extra.math.result;
+				else
+					return m_p->class_id;
 			case PXTDATA_X:
 				return m_p->x;
 			case PXTDATA_Y:
