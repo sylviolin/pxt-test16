@@ -251,23 +251,30 @@ namespace pixetto {
 		return false
     }
     
+    //% block="get firmware version"
+    //% shim=pixetto::pxtGetVersion
+    //% weight=95
+    export function pxtGetVersion(): number {
+		return 0;
+    }
+    
 	//% block="enable function %func"
 	//% shim=pixetto::pxtSetFunc
-	//% weight=99
+	//% weight=94
 	export function pxtSetFunc(func: PixFunction): void {
 		return;
     }
     
-    //% block="number of detected objects"
+    //% block="get number of detected objects"
     //% shim=pixetto::pxtAvailable
-    //% weight=95
+    //% weight=93
     export function pxtAvailable(): number {
 		return 0;
     }
     
     //% block="get one detected object data"
     //% shim=pixetto::pxtGetData
-    //% weight=94
+    //% weight=92
     export function pxtGetData(): number {
 		return 0;
     }
