@@ -275,8 +275,8 @@ namespace pixetto {
     //% block="get one detected object data"
     //% shim=pixetto::pxtGetData
     //% weight=92
-    export function pxtGetData(): number {
-		return 0;
+    export function pxtGetData(): boolean {
+		return false;
     }
     
     //% block="get %field"

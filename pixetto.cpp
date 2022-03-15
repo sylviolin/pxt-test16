@@ -418,7 +418,7 @@ namespace pixetto {
 		return 0;
 	}	
 	//%
-	int pxtGetData(uint8_t* buf, int buflen)
+	bool pxtGetData(uint8_t* buf, int buflen)
 	{
 		uint8_t cmd[] = { PXT_PACKET_START, 0x05, PXT_CMD_GET_DATA, 0, PXT_PACKET_END };
 		addcksum(cmd, sizeof(cmd));
@@ -429,10 +429,10 @@ namespace pixetto {
 
 		while ((len = getdata(buf, PXT_BUF_SIZE)) > 0) {
 			if (m_p->cmd == PXT_CMD_GET_DATA && len != 5)
-				break;
+				return true;
 		}
 
-		return len;
+		return false;
 	}
 
 	//%
