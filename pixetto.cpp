@@ -270,7 +270,7 @@ namespace pixetto {
 			int n = buf[1];
 			if (n <= PXT_BUF_SIZE) {
 				read_len = serial->read(&buf[2], n-2);
-				if (buf[n-1] == PXT_PACKET_END)
+				if (buf[n-1] == PXT_PACKET_END && verifycksum(buf, n))
 					return buf[1];
 			}
 		}
@@ -418,14 +418,17 @@ namespace pixetto {
 		return 0;
 	}	
 	//%
-	bool pxtGetData(uint8_t* buf, int buflen)
+	bool pxtGetData()
 	{
 		uint8_t cmd[] = { PXT_PACKET_START, 0x05, PXT_CMD_GET_DATA, 0, PXT_PACKET_END };
 		addcksum(cmd, sizeof(cmd));
 		serial->send(cmd, sizeof(cmd), ASYNC);
-		int len;
+	
+		uint8_t buf[PXT_BUF_SIZE];
+		memset(buf, 0, PXT_BUF_SIZE);
 
 		m_p = (struct pxt_data*) buf;
+		int len;
 
 		while ((len = getdata(buf, PXT_BUF_SIZE)) > 0) {
 			if (m_p->cmd == PXT_CMD_GET_DATA && len != 5)
