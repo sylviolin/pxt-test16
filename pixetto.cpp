@@ -211,7 +211,7 @@ namespace pixetto {
 		do {
 			read_len = serial->read(buf, 1, ASYNC);
 			loop++;
-		} while (buf[0] != PXT_PACKET_START && loop < 300000);
+		} while (buf[0] != PXT_PACKET_START && loop < 200000);
 
 		if (read_len == 0 || read_len == MICROBIT_NO_DATA) return 0;
 
