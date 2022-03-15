@@ -19,7 +19,6 @@
 
 #define PXT_BUF_SIZE            64
 
-
 #define PXT_RET_FW_VERSION		0xE3
 #define PXT_RET_OBJNUM			0x46 //0xE4
 
@@ -288,40 +287,6 @@ namespace pixetto {
 		return ret;
     }
     
-    /*
-    int test_pxtGetVersion() {
-	}
-
-    int test_begin(PixSerialPin rx, PixSerialPin tx){
-		bOnStarting = true;
-		
-		uint32_t ret = 0;
-		PinName txn, rxn;
-		uBit.sleep(3000);
-		
-		if (getPinName(tx, txn) && getPinName(rx, rxn))
-		{
-			if (serial == nullptr)
-				serial = new MicroBitSerial(txn, rxn, 64, 20);
-
-			#if MICROBIT_CODAL
-			serial->setBaudrate(38400);
-			#else
-			serial->baud(38400);
-			#endif
-			
-			//serial->setRxBufferSize(64);
-			//serial->setTxBufferSize(32);
-			uBit.sleep(1000);
-			
-			ret = test_pxtGetVersion();
-		}
-		if (ret != 0)
-			bOnStarting = false;
-			
-		return ret;
-    }*/
-    
 	//%
 	void pxtSetFunc(int id)
 	{
@@ -408,5 +373,4 @@ namespace pixetto {
 				return 0;
 		}
 	}
-		
 }
